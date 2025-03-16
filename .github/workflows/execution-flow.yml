@@ -33,9 +33,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Test code
+        id: run-test
         run: npm run test
       - name: Upload test report
-        uses: actions/upload-artifact@v3
+        if: steps.run-test.outcome  #if 구문은 컨텍스트 오브젝트를 사용하는 ${{ }} 구문을 사용할 필요가 없다.
+        uses: actions/upload-artifact@v4
         with:
           name: test-report
           path: test.json
@@ -57,7 +59,7 @@ jobs:
         id: build-website
         run: npm run build
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dist-files
           path: dist
@@ -66,7 +68,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: dist-files
       - name: Output contents
