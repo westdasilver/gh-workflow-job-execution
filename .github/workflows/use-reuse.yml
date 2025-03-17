@@ -70,6 +70,8 @@ jobs:
   deploy:
     needs: build
     uses: ./.github/workflows/reusable.yml
+    with:
+      artifact-name: dist-files # 재사용 워크플로우에 전달할 입력값
   report:
     if: failure()
     needs: [lint, deploy] # lint, deploy잡에 의존성을 주고 잡이 실패하면 실행된다.

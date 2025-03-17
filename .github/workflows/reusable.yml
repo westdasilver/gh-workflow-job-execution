@@ -1,8 +1,21 @@
 name: Reusable Workflow
-on: workflow_call
+on: 
+  workflow_call: # 다른 워크플로우에서 이 워크플로우를 호출할 수 있게 해주는 이벤트
+    inputs: # 워크플로우 호출 시 전달받을 입력값 정의
+      artifact-name: # 입력값의 이름
+        description: '아티팩트 파일 이름' # 입력값에 대한 설명
+        required: false # 필수 입력값이 아님
+        default: dist # 기본값은 'dist'
+        type: string # 입력값의 타입은 문자열
 jobs: 
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Get code
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact-name}}
+      - name: List files
+        run: ls
       - name: Output information
         run: echo "Deploying & uploading..."
