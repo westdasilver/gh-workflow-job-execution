@@ -54,9 +54,10 @@ jobs:
         id: cache
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: node_modules
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true' # 캐시가 없으면 설치
         run: npm ci
       - name: Build website
         id: build-website
