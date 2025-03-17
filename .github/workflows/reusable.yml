@@ -7,11 +7,17 @@ on:
         required: false # 필수 입력값이 아님
         default: dist # 기본값은 'dist'
         type: string # 입력값의 타입은 문자열
+    outputs:    # 재사용 워크플로우의 출력값 정의
+      result:   # 출력값의 이름
+        description: '워크플로우 실행 결과'
+        value: ${{ jobs.deploy.outputs.outcome }}    # deploy 잡의 outcome 출력값을 사용
     secrets:
       some-secret: # 시크릿 이름
         required: true # 필수 시크릿
 jobs: 
   deploy:
+    outputs:    # deploy 잡의 출력값 정의
+      outcome: ${{ steps.set-result.outputs.step-result }}    # set-result 스텝의 step-result 출력값을 사용
     runs-on: ubuntu-latest
     steps:
       - name: Get code
@@ -24,3 +30,6 @@ jobs:
         run: echo ${{ secrets.some-secret }}
       - name: Output information
         run: echo "Deploying & uploading..."
+      - name: Set result output    # 실제 출력값을 설정하는 스텝
+        id: set-result    # 다른 곳에서 참조하기 위한 스텝 ID
+        run: echo "step-result=success" >> $GITHUB_OUTPUT    # GITHUB_OUTPUT 파일에 출력값 추가
