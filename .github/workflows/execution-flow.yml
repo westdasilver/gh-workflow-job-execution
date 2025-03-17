@@ -36,7 +36,7 @@ jobs:
         id: run-test
         run: npm run test
       - name: Upload test report
-        if: steps.run-test.outcome  #if 구문은 컨텍스트 오브젝트를 사용하는 ${{ }} 구문을 사용할 필요가 없다.
+        if: failure() && steps.run-test.outcome == 'failure'  #if 구문은 컨텍스트 오브젝트를 사용하는 ${{ }} 구문을 사용할 필요가 없다. failure()는 이전 단계가 실패했는지 확인하는 컨텍스트 오브젝트이다.
         uses: actions/upload-artifact@v4
         with:
           name: test-report
